@@ -1,0 +1,13 @@
+There are two ways to align a molecule:
+
+1. the python script align_pqr.py
+  - finds center of mass
+  - shifts to (0,0,0)
+  - finds least-squares line through data
+  - orients z-axis to this line
+
+  ----> 1BNA_align.pqr
+
+2. use http://www.ks.uiuc.edu/Research/vmd/script_library/scripts/orient/
+
+  ----> 1BNA_orient.pqr

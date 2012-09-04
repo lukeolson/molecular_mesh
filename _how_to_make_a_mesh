@@ -1,0 +1,55 @@
+Input: 1BNA.pdb
+
+1: 1BNA.pdb -> 1BNA.pqr
+    - use pdb2pqr by the APBS group
+    - output as 1BNA.pqr
+
+    pdb2pqr 1BNA.pdb 1BNA.pqr
+
+2: align 1BNA.pqr
+    - find center of mass
+    - translate to (0,0,0) center of mass
+    - find least-squares line through center-of-mass
+    - realign line with z-axis
+    - output as 1BNA_aligned.pqr
+
+    align_pqr.py 1BNA.pqr 1BNA_aligned.pqr
+
+3: generate 1BNA_aligned_mesh.off
+    - use GAMER with settings ...
+      ./MolecularMesh 1BNA_aligned.pqr 1 2.5 -0.1 1.99 0.1666
+
+4: scale 1BNA_aligned.pqr
+    - scale x,y,z coordinates by 0.1
+
+    scale_pqr.py 1BNA_aligned.pqr 1BNA_aligned_scaled.pqr
+
+    note: the resulting pqr file will not view correctly in in say VMD since the
+          radii are not scaled correctly
+
+5: scale 1BNA_aligned_mesh.off
+    - scale x,y,z coordinates by 0.1
+
+    scale_surface_mesh.py 1BNA_aligned_mesh.off 1BNA_aligned_scaled_mesh.off
+
+6. convert the surface mesh from .off to .msh
+
+7: generate ichannel
+  for 1BNA the dimensions are
+    xmmin = -1.34389
+    xmmax = 1.41256
+    ymmin = -1.32145
+    ymmax = 1.27902
+    zmmin = -2.47419
+    zmmax = 2.44085
+  the radius of the cylinder will be 2
+  the top of the cylinder will be -3 and 3
+  the top of the channel will be -8 and 8
+  the sides of the channel will go from -4 to 4
+
+    - ichannelps.geo
+    - use 1BNA_aligned_scaled_mesh.off 
+    - output ichannelps_#ofelements.msh
+
+8: convert msh to xml
+    - use msh2xmlpart.py
